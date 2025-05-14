@@ -15,7 +15,7 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://use.typekit.net/tis7nmt.css" />
       </head>
 
-      <body className='font-["source-arabic-sans"] '>{children}</body>
+      <body className="min-h-screen overflow-hidden">{children}</body>
     </html>
   );
 }
