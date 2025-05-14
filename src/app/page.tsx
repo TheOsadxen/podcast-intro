@@ -1,102 +1,132 @@
+"use client";
+
+import Head from "next/head";
+import Link from "next/link";
 import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className={`min-h-screen flex flex-col bg-background`}>
+      <Head>
+        <title>مكالمة | Mukalamah</title>
+        <meta name="description" content="منصتك لاكتشاف أفكار مبتكرة" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      <header className="pt-6 px-4">
+        {/*Navbar section */}
+        <div className=" w-full">
+          {/* Logo and social media icons */}
+          <div className=" w-[90%] mx-auto flex justify-between items-center">
+            <div className="text-right">
+              <Image
+                src="/LOGO.svg"
+                alt="Logo"
+                width={142}
+                height={40}
+                priority
+              />
+            </div>
+
+            <div className="flex justify-between gap-10">
+              <div className="flex gap-5">
+                <Link href="tel:+123456789" className=" z-10">
+                  <Image
+                    src="/subtract.svg"
+                    alt="mail"
+                    width={22}
+                    height={20}
+                    priority
+                  />
+                </Link>
+                <Link href="https://instagram.com" className=" z-10">
+                  <Image
+                    src="/vector.svg"
+                    alt="instagram"
+                    width={22}
+                    height={20}
+                    priority
+                  />
+                </Link>
+                <Link href="mailto:info@example.com" className=" z-10">
+                  <Image
+                    src="/intersect.svg"
+                    alt="call"
+                    width={22}
+                    height={20}
+                    priority
+                  />
+                </Link>
+              </div>
+
+              {/* nav menu */}
+              <div className="group inline-flex flex-col justify-center  items-center delay-[20] transition-[gap] duration-300 ease-in-out gap-[6px] hover:gap-[10px] z-10">
+                <span className="block w-8 h-1 bg-black transition-colors duration-100 ease-in-out group-hover:bg-[#e56e53]"></span>
+                <span className="block w-8 h-1 bg-[#e56e53] transition-colors duration-100 ease-in-out group-hover:bg-black"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main className="relative flex-grow flex items-center justify-center mb-5">
+        {/* Background SVG */}
+        <div className="absolute inset-0 flex items-center justify-center z-0">
+          <Image
+            src="/waves-vector.svg"
+            width={800}
+            height={800}
+            alt="bg-waves"
+            className="h-[90dvh] w-[90dvw] object-contain"
+          />
+        </div>
+
+        {/* Text content  */}
+        <div className="absolute inset-0 z-10 flex-col flex items-center justify-center ">
+          <div className="text-center  mt-10 flex items-end relative">
+            <h2
+              className="text-lg md:text-5xl font-bold rtl text-black align-bottom "
+              style={{ fontFamily: `"source-arabic-sans", sans-serif` }}
+            >
+              أهلاً بك في <span className="text-light-orange">مُكالمة،</span>
+            </h2>
+
+            <div className="absolute top-[80px] right-0 w-[100%] text-center font-[600] rtl">
+              <p className="mb-1 ">منصتك لاكتشاف أفكار مبتكرة</p>
+              <p>تلهم التغيير الإيجابي.</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="mx-auto flex self-end ">
+          <button className=" gap-2 md:min-w-[230px] backdrop-blur-[13px] cursor-pointer z-100 flex items-center justify-between font-bold h-[48px] rounded-[20px] bg-[#e2ddbf] pl-1 pr-4 py-1 text-black w-full max-w-[320px]">
+            {/* Centered Text */}
+            <div className="flex-grow text-center  ">
+              <h3 className="text-lg">ابــــــــدأ التجربة</h3>
+            </div>
+
+            <div className="flex-shrink-0  ">
+              <Image
+                src="/play-icon.svg"
+                width={60}
+                height={40}
+                alt="play-icon"
+              />
+            </div>
+          </button>
         </div>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+
+      <footer className="p-4 text-center text-sm flex gap-2 items-center mx-auto">
+        <Image
+          src="/headphones.svg"
+          width={20}
+          height={20}
+          alt="headset-icon"
+        />
+        <p className="text-md mt-2 text-faded-black opacity-[50%]">
+          ننصح باستخدام سماعات الرأس لتحقيق أفضل تجربة.{" "}
+        </p>
       </footer>
     </div>
   );

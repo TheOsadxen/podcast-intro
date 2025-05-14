@@ -1,26 +1,23 @@
+@import url("https://use.typekit.net/tis7nmt.css");
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "source-arabic-sans", sans-serif;
+}
+
+:root {
+  --background-rgb: 241, 238, 205, 1;
+  --light-orange-rgb: 229, 110, 83, 1;
+  --light-black-rgb: 0, 0, 0, 0.1;
+}
+
+
+@theme {
+
+  --color-light-orange: rgb(var(--light-orange-rgb));
+  --color-background: rgb(var(--background-rgb));
+  --color-light-black: rgb(var(--light-black-rgb));
+
+
+  --default-font-family: "source-arabic-sans", sans-serif;
 }
