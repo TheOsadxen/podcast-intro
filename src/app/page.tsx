@@ -3,15 +3,35 @@
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
 export default function Home() {
+  const [showStartTourButton, setShowStartTourButton] = useState(true);
+  const [showIntroFooter, setShowIntroFooter] = useState(false);
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   const sceneRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const firstSaudiGuyRef = useRef<HTMLImageElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const menuExpanderIconRef = useRef<HTMLDivElement>(null);
+
+  const [menuHeight, setMenuHeight] = useState(0);
 
   const playIconRef = useRef<HTMLDivElement>(null);
+
+  // Measure the menu height for animations
+  useEffect(() => {
+    if (isMenuOpen && menuRef.current) {
+      const height = menuRef.current.scrollHeight;
+      setMenuHeight(height);
+    } else {
+      setMenuHeight(0);
+    }
+  }, [isMenuOpen]);
 
   //const nextSceneRef = useRef<HTMLDivElement>(null);
 
@@ -22,11 +42,11 @@ export default function Home() {
     tl.to(
       buttonRef.current,
       {
-        width: 70,
-        duration: 0.3,
-        ease: "sine.in",
+        width: 72,
+        duration: 0.2,
+        ease: "power2.inOut",
       },
-      0 // starts immediately
+      0
     );
 
     // Start text fade and scene zoom 100ms later
@@ -36,32 +56,64 @@ export default function Home() {
         y: -100,
         opacity: 0,
         scale: 0.9,
-        duration: 1,
+        duration: 0.7,
+        onComplete: () => setShowStartTourButton(false),
+
         ease: "power2.inOut",
       },
-      "+=0.1"
+      0
     );
 
     tl.to(
       sceneRef.current,
       {
-        scale: 1.6,
-        duration: 1.2,
+        scale: 1.35,
+        duration: 1.4,
         ease: "power2.inOut",
       },
-      "-=1" // starts at the same time as textRef animation
+      0
+    );
+
+    tl.fromTo(
+      firstSaudiGuyRef.current,
+      {
+        opacity: 0,
+        scale: 0.7,
+      },
+      {
+        opacity: 1,
+        scale: 0.95,
+        duration: 0.8,
+        ease: "power2.out",
+        onStart: () => setShowIntroFooter(true),
+      },
+      "-=0.7" // starts 0.5s before the zoom finishes
+    );
+  };
+
+  const handleExpandMenuIcon = () => {
+    const tl = gsap.timeline();
+
+    tl.to(
+      menuExpanderIconRef.current,
+      {
+        gap: 10,
+        duration: 0.8,
+        ease: "power2.inOut",
+      },
+      0
     );
   };
 
   return (
-    <div className={`min-h-screen flex flex-col bg-background`}>
+    <div className={`min-h-screen flex flex-col bg-background px-4`}>
       <Head>
         <title>مكالمة | Mukalamah</title>
         <meta name="description" content="منصتك لاكتشاف أفكار مبتكرة" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <header className="pt-6 px-4">
+      <header className="pt-6">
         {/*Navbar section */}
         <div className=" w-full">
           {/* Logo and social media icons */}
@@ -76,41 +128,123 @@ export default function Home() {
               />
             </div>
 
-            <div className="flex justify-between gap-10">
-              <div className="flex gap-5">
-                <Link href="tel:+123456789" className=" z-10">
-                  <Image
-                    src="/subtract.svg"
-                    alt="mail"
-                    width={22}
-                    height={20}
-                    priority
-                  />
-                </Link>
-                <Link href="https://instagram.com" className=" z-10">
-                  <Image
-                    src="/vector.svg"
-                    alt="instagram"
-                    width={22}
-                    height={20}
-                    priority
-                  />
-                </Link>
-                <Link href="mailto:info@example.com" className=" z-10">
-                  <Image
-                    src="/intersect.svg"
-                    alt="call"
-                    width={22}
-                    height={20}
-                    priority
-                  />
-                </Link>
-              </div>
+            <div className="relative">
+              {/* Main container with onMouseLeave handler */}
+              <div
+                className="relative"
+                onMouseLeave={() => setIsMenuOpen(false)}
+              >
+                {/* Header area with icons - will be covered by menu when open */}
+                <div className="flex items-center  p-4 bg-transparent rounded-lg z-10 relative ">
+                  {/* Contact Icons */}
+                  <Link href="tel:+123456789" className="me-6">
+                    <Image
+                      src="/subtract.svg"
+                      alt="call"
+                      width={22}
+                      height={20}
+                    />
+                  </Link>
+                  <Link href="https://instagram.com" className="me-6">
+                    <Image
+                      src="/vector.svg"
+                      alt="instagram"
+                      width={22}
+                      height={20}
+                    />
+                  </Link>
+                  <Link href="mailto:info@example.com" className="me-12">
+                    <Image
+                      src="/intersect.svg"
+                      alt="mail"
+                      width={22}
+                      height={20}
+                    />
+                  </Link>
 
-              {/* nav menu */}
-              <div className="group inline-flex flex-col justify-center  items-center delay-[20] transition-[gap] duration-300 ease-in-out gap-[6px] hover:gap-[10px] z-10">
-                <span className="block w-8 h-1 bg-black transition-colors duration-100 ease-in-out group-hover:bg-[#e56e53]"></span>
-                <span className="block w-8 h-1 bg-[#e56e53] transition-colors duration-100 ease-in-out group-hover:bg-black"></span>
+                  {/* Burger Icon - Only this triggers the menu open */}
+                  <div
+                    onMouseEnter={() => {
+                      setIsMenuOpen(true);
+                      handleExpandMenuIcon();
+                    }}
+                    className="inline-flex flex-col justify-center gap-2.5 items-center cursor-pointer group "
+                  >
+                    <span className="block w-8 h-1 bg-black group-hover:bg-[#e56e53] transition-all duration-300 ease-in-out"></span>
+                    <span className="block w-8 h-1 bg-[#e56e53] group-hover:bg-black transition-all duration-300 ease-in-out"></span>
+                  </div>
+                </div>
+
+                {/* Dropdown Menu that overlays the header */}
+                <div
+                  ref={menuRef}
+                  className={`absolute top-0 left-0 w-full ${
+                    isMenuOpen ? "bg-shade-background" : "bg-transparent"
+                  }  overflow-hidden transition-all duration-300 ease-in-out rounded-2xl shadow-xs z-2000`}
+                  style={{ height: `${menuHeight}px` }}
+                >
+                  {/* Header area clone for consistent styling */}
+                  <div className="flex items-center gap-10 p-4">
+                    <div className="ml-auto flex items-center gap-6">
+                      <Link href="tel:+123456789">
+                        <Image
+                          src="/subtract.svg"
+                          alt="call"
+                          width={22}
+                          height={20}
+                        />
+                      </Link>
+                      <Link href="https://instagram.com">
+                        <Image
+                          src="/vector.svg"
+                          alt="instagram"
+                          width={22}
+                          height={20}
+                        />
+                      </Link>
+                      <Link href="mailto:info@example.com">
+                        <Image
+                          src="/intersect.svg"
+                          alt="mail"
+                          width={22}
+                          height={20}
+                        />
+                      </Link>
+                    </div>
+
+                    <div
+                      ref={menuExpanderIconRef}
+                      className="inline-flex flex-col justify-center items-center cursor-pointer group group-hover:gap-4 gap-2.5"
+                    >
+                      <span className="block w-8 h-1 bg-black group-hover:bg-[#e56e53] transition-all duration-300 ease-in-out"></span>
+                      <span className="block w-8 h-1 bg-[#e56e53] group-hover:bg-black transition-all duration-300 ease-in-out"></span>
+                    </div>
+                  </div>
+
+                  {/* Menu items */}
+                  <ul className="flex flex-col gap-4 rtl text-black font-normal text-xl px-6 py-4 text-left">
+                    <li className="mt-10">
+                      <Link href="#" className="block py-1">
+                        مانيفستو بديل
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="#" className="block py-1">
+                        بودكاست مُكالمة
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="#" className="block py-1">
+                        عن بديل
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="#" className="block pt-1">
+                        المتحدثون
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
@@ -151,29 +285,57 @@ export default function Home() {
           </div>
 
           <div className="mx-auto flex self-end ">
-            <button
-              ref={buttonRef}
-              onClick={handleStartClick}
-              className="cursor-pointer z-100 flex flex-row-reverse items-center overflow-hidden h-[48px] rounded-[20px] bg-[#e2ddbf] backdrop-blur-[13px] text-black px-1.5 transition-all duration-500"
-            >
-              {/* Play Icon - stays on right in RTL */}
-              <div ref={playIconRef} className="flex-shrink-0">
-                <Image
-                  src="/play-icon.svg"
-                  width={60}
-                  height={40}
-                  alt="play-icon"
-                />
-              </div>
-
-              {/* Text - gets clipped from left */}
-              <span
-                className="text-lg font-bold whitespace-nowrap me-3"
-                style={{ minWidth: "160px" }}
+            {showStartTourButton && (
+              <button
+                ref={buttonRef}
+                onClick={handleStartClick}
+                className="cursor-pointer z-100 flex flex-row-reverse items-center overflow-hidden h-[48px] rounded-[20px] bg-[#e2ddbf] backdrop-blur-[13px] text-black px-1.5 transition-all duration-500"
               >
-                ابــــــــدأ التجربة
-              </span>
-            </button>
+                {/* Play Icon - stays on right in RTL */}
+                <div ref={playIconRef} className="flex-shrink-0">
+                  <Image
+                    src="/play-icon.svg"
+                    width={60}
+                    height={40}
+                    alt="play-icon"
+                  />
+                </div>
+
+                {/* Text - gets clipped from left */}
+                <span
+                  className="text-lg font-bold whitespace-nowrap me-3"
+                  style={{ minWidth: "160px" }}
+                >
+                  ابــــــــدأ التجربة
+                </span>
+              </button>
+            )}
+          </div>
+
+          <div
+            ref={firstSaudiGuyRef}
+            className="absolute right-20 inset-0 z-100 flex items-center justify-center scale-[0.9] opacity-0"
+            style={{ transformOrigin: "center center" }}
+          >
+            {/* Wrapper that links guy + headphones */}
+            <div className="relative w-[400px] h-[400px]">
+              {/* Guy */}
+              <Image
+                src="/saudi-guy-1.svg"
+                alt="Guy"
+                fill
+                className="object-contain relative z-10"
+              />
+
+              {/* Headphones - now positioned relative to guy */}
+              <Image
+                src="/headphone2.svg"
+                alt="headphones"
+                width={70}
+                height={100}
+                className="absolute top-[105px] right-[103px] z-20"
+              />
+            </div>
           </div>
         </main>
 
@@ -188,6 +350,38 @@ export default function Home() {
             ننصح باستخدام سماعات الرأس لتحقيق أفضل تجربة.{" "}
           </p>
         </footer>
+      </div>
+
+      {/* New Footer (not inside sceneRef anymore!) */}
+      <div className="px-4 w-full border border-red-300 z-100 absolute">
+        {showIntroFooter && (
+          <footer className="fixed bottom-10 mx-auto w-[90%] flex justify-between items-center z-50 text-[#56554A]">
+            {/* Sound Button */}
+            <button className="flex items-center gap-2 bg-[#e2ddbf] rounded-full px-4 py-1">
+              <Image src="/sound-icon.svg" alt="sound" width={20} height={20} />
+              <span className="font-bold">الصوت</span>
+            </button>
+
+            {/* Scroll Mouse */}
+            <div className="flex justify-center items-center">
+              <Image
+                src="/mouse-scroll.svg"
+                alt="scroll"
+                width={18}
+                height={30}
+              />
+            </div>
+
+            {/* Skip Intro */}
+            <Link
+              href="#skip"
+              className="flex items-center gap-2 text-sm font-medium"
+            >
+              تخطي المقدمة
+              <Image src="/video-icon.svg" alt="skip" width={14} height={14} />
+            </Link>
+          </footer>
+        )}
       </div>
     </div>
   );

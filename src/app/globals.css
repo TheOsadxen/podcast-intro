@@ -9,6 +9,7 @@ body {
   --background-rgb: 241, 238, 205, 1;
   --light-orange-rgb: 229, 110, 83, 1;
   --light-black-rgb: 0, 0, 0, 0.1;
+  --shade-background-rgb: 216, 214, 184, 255;
 }
 
 
@@ -17,7 +18,7 @@ body {
   --color-light-orange: rgb(var(--light-orange-rgb));
   --color-background: rgb(var(--background-rgb));
   --color-light-black: rgb(var(--light-black-rgb));
-
+  --color-shade-background: rgb(var(--shade-background-rgb));
 
   --default-font-family: "source-arabic-sans", sans-serif;
 }
