@@ -9,7 +9,7 @@ import gsap from "gsap";
 export default function Home() {
   const [showStartTourButton, setShowStartTourButton] = useState(true);
   const [showIntroFooter, setShowIntroFooter] = useState(false);
-
+  const [showScrollMouse, setShowScrollMouse] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const sceneRef = useRef<HTMLDivElement>(null);
@@ -17,6 +17,7 @@ export default function Home() {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const firstSaudiGuyRef = useRef<HTMLImageElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+
   const menuExpanderIconRef = useRef<HTMLDivElement>(null);
 
   const [menuHeight, setMenuHeight] = useState(0);
@@ -86,8 +87,13 @@ export default function Home() {
         duration: 0.8,
         ease: "power2.out",
         onStart: () => setShowIntroFooter(true),
+        onComplete: () => {
+          setTimeout(() => {
+            setShowScrollMouse(true);
+          }, 200);
+        },
       },
-      "-=0.7" // starts 0.5s before the zoom finishes
+      "-=0.7"
     );
   };
 
@@ -106,7 +112,7 @@ export default function Home() {
   };
 
   return (
-    <div className={`min-h-screen flex flex-col bg-background px-4`}>
+    <div className={`min-h-screen flex flex-col bg-background px-[5%] w-full `}>
       <Head>
         <title>مكالمة | Mukalamah</title>
         <meta name="description" content="منصتك لاكتشاف أفكار مبتكرة" />
@@ -117,7 +123,7 @@ export default function Home() {
         {/*Navbar section */}
         <div className=" w-full">
           {/* Logo and social media icons */}
-          <div className=" w-[90%] mx-auto flex justify-between items-center">
+          <div className="  mx-auto flex justify-between items-center">
             <div className="text-right">
               <Image
                 src="/LOGO.svg"
@@ -353,36 +359,46 @@ export default function Home() {
       </div>
 
       {/* New Footer (not inside sceneRef anymore!) */}
-      <div className="px-4 w-full border border-red-300 z-100 absolute">
-        {showIntroFooter && (
-          <footer className="fixed bottom-10 mx-auto w-[90%] flex justify-between items-center z-50 text-[#56554A]">
-            {/* Sound Button */}
-            <button className="flex items-center gap-2 bg-[#e2ddbf] rounded-full px-4 py-1">
-              <Image src="/sound-icon.svg" alt="sound" width={20} height={20} />
-              <span className="font-bold">الصوت</span>
-            </button>
+      {showIntroFooter && (
+        <div className="fixed bottom-10 mx-auto w-[90%] flex justify-between items-center z-1000 text-[#56554A]">
+          <Image
+            src="/skip-intro-button.svg"
+            className="cursor-pointer"
+            alt="skip"
+            width={120}
+            height={30}
+          />
 
-            {/* Scroll Mouse */}
-            <div className="flex justify-center items-center">
+          {/* Scroll Mouse */}
+          {showScrollMouse && (
+            <div className="flex justify-center items-center relative opacity-0 animate-fadeIn delay-[800ms]">
               <Image
-                src="/mouse-scroll.svg"
-                alt="scroll"
-                width={18}
+                className="relative"
+                src="/mouse.svg"
+                alt="mouse"
+                width={30}
                 height={30}
               />
+              <Image
+                className="absolute bottom-2 left-2.5 animate-scroll"
+                src="/scroll.svg"
+                alt="scroll"
+                width={10}
+                height={10}
+              />
             </div>
+          )}
 
-            {/* Skip Intro */}
-            <Link
-              href="#skip"
-              className="flex items-center gap-2 text-sm font-medium"
-            >
-              تخطي المقدمة
-              <Image src="/video-icon.svg" alt="skip" width={14} height={14} />
-            </Link>
-          </footer>
-        )}
-      </div>
+          {/* Sound Button */}
+          <Image
+            src="/mute-button.svg"
+            alt="sound"
+            width={130}
+            height={40}
+            className="cursor-pointer"
+          />
+        </div>
+      )}
     </div>
   );
 }
