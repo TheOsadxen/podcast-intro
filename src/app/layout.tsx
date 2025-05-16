@@ -15,7 +15,9 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://use.typekit.net/tis7nmt.css" />
       </head>
 
-      <body className="min-h-screen overflow-hidden">{children}</body>
+      <body className="min-h-screen overflow-hidden  bg-background">
+        {children}
+      </body>
     </html>
   );
 }

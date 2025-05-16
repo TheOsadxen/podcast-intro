@@ -5,26 +5,22 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import SceneOne from "@/components/scenes/SceneOne";
+import { SceneType } from "@/types/scenes";
+import SceneTwo from "@/components/scenes/SceneTwo";
 
 export default function Home() {
-  const [showStartTourButton, setShowStartTourButton] = useState(true);
-  const [showIntroFooter, setShowIntroFooter] = useState(false);
-  const [showScrollMouse, setShowScrollMouse] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const sceneRef = useRef<HTMLDivElement>(null);
-  const textRef = useRef<HTMLDivElement>(null);
-  const buttonRef = useRef<HTMLButtonElement>(null);
-  const firstSaudiGuyRef = useRef<HTMLImageElement>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
-
-  const menuExpanderIconRef = useRef<HTMLDivElement>(null);
-
+  const [sceneStep, setSceneStep] = useState<SceneType>("landing-page");
+  const [showStartTourButton, setShowStartTourButton] = useState<boolean>(true);
+  const [showIntroFooter, setShowIntroFooter] = useState<boolean>(false);
+  const [showScrollMouse, setShowScrollMouse] = useState<boolean>(false);
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [menuHeight, setMenuHeight] = useState(0);
 
-  const playIconRef = useRef<HTMLDivElement>(null);
+  const sceneRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const menuExpanderIconRef = useRef<HTMLDivElement>(null);
 
-  // Measure the menu height for animations
   useEffect(() => {
     if (isMenuOpen && menuRef.current) {
       const height = menuRef.current.scrollHeight;
@@ -34,72 +30,16 @@ export default function Home() {
     }
   }, [isMenuOpen]);
 
-  //const nextSceneRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (sceneStep === "landing-page") {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflowY = "auto";
+    }
+  }, [sceneStep]);
 
-  const handleStartClick = () => {
+  const handleExpandMenuIcon = (): void => {
     const tl = gsap.timeline();
-
-    // Shrink the button first (starts immediately)
-    tl.to(
-      buttonRef.current,
-      {
-        width: 72,
-        duration: 0.2,
-        ease: "power2.inOut",
-      },
-      0
-    );
-
-    // Start text fade and scene zoom 100ms later
-    tl.to(
-      textRef.current,
-      {
-        y: -100,
-        opacity: 0,
-        scale: 0.9,
-        duration: 0.7,
-        onComplete: () => setShowStartTourButton(false),
-
-        ease: "power2.inOut",
-      },
-      0
-    );
-
-    tl.to(
-      sceneRef.current,
-      {
-        scale: 1.35,
-        duration: 1.4,
-        ease: "power2.inOut",
-      },
-      0
-    );
-
-    tl.fromTo(
-      firstSaudiGuyRef.current,
-      {
-        opacity: 0,
-        scale: 0.7,
-      },
-      {
-        opacity: 1,
-        scale: 0.95,
-        duration: 0.8,
-        ease: "power2.out",
-        onStart: () => setShowIntroFooter(true),
-        onComplete: () => {
-          setTimeout(() => {
-            setShowScrollMouse(true);
-          }, 200);
-        },
-      },
-      "-=0.7"
-    );
-  };
-
-  const handleExpandMenuIcon = () => {
-    const tl = gsap.timeline();
-
     tl.to(
       menuExpanderIconRef.current,
       {
@@ -112,14 +52,16 @@ export default function Home() {
   };
 
   return (
-    <div className={`min-h-screen flex flex-col bg-background px-[5%] w-full `}>
+    <div
+      className={`min-h-screen flex flex-col bg-background px-[5%] w-full h-100dvh`}
+    >
       <Head>
         <title>مكالمة | Mukalamah</title>
         <meta name="description" content="منصتك لاكتشاف أفكار مبتكرة" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <header className="pt-6">
+      <header className="fixed top-0 left-[5%] w-[90%] z-50 pt-6 bg-transparent">
         {/*Navbar section */}
         <div className=" w-full">
           {/* Logo and social media icons */}
@@ -257,95 +199,27 @@ export default function Home() {
         </div>
       </header>
 
+      {/* SCENE 1 */}
       <div className="flex-grow flex flex-col justify-between" ref={sceneRef}>
-        <main className="relative flex-grow flex items-center justify-center mb-5">
-          {/* Background SVG */}
-          <div className="absolute inset-0 flex items-center justify-center z-0 scale-100 transition-transform">
-            <Image
-              src="/waves-vector.svg"
-              width={800}
-              height={800}
-              alt="bg-waves"
-              className="h-[90dvh] w-[90dvw] object-contain"
-            />
-          </div>
+        {["landing-page", "sceneOne"].includes(sceneStep) ? (
+          <SceneOne
+            sceneRef={sceneRef as React.RefObject<HTMLDivElement>}
+            sceneStep={sceneStep}
+            setSceneStep={setSceneStep}
+            showStartTourButton={showStartTourButton}
+            setShowStartTourButton={setShowStartTourButton}
+            setShowIntroFooter={setShowIntroFooter}
+            setShowScrollMouse={setShowScrollMouse}
+          />
+        ) : (
+          <SceneTwo />
+        )}
 
-          {/* Text content  */}
-          <div
-            className="absolute inset-0 z-10 flex-col flex items-center justify-center "
-            ref={textRef}
-          >
-            <div className="text-center  mt-10 flex items-end relative">
-              <h2
-                className="text-lg md:text-5xl font-bold rtl text-black align-bottom "
-                style={{ fontFamily: `"source-arabic-sans", sans-serif` }}
-              >
-                أهلاً بك في <span className="text-light-orange">مُكالمة،</span>
-              </h2>
-
-              <div className="absolute top-[80px] right-0 w-[100%] text-center font-[600] rtl">
-                <p className="mb-1 ">منصتك لاكتشاف أفكار مبتكرة</p>
-                <p>تلهم التغيير الإيجابي.</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="mx-auto flex self-end ">
-            {showStartTourButton && (
-              <button
-                ref={buttonRef}
-                onClick={handleStartClick}
-                className="cursor-pointer z-100 flex flex-row-reverse items-center overflow-hidden h-[48px] rounded-[20px] bg-[#e2ddbf] backdrop-blur-[13px] text-black px-1.5 transition-all duration-500"
-              >
-                {/* Play Icon - stays on right in RTL */}
-                <div ref={playIconRef} className="flex-shrink-0">
-                  <Image
-                    src="/play-icon.svg"
-                    width={60}
-                    height={40}
-                    alt="play-icon"
-                  />
-                </div>
-
-                {/* Text - gets clipped from left */}
-                <span
-                  className="text-lg font-bold whitespace-nowrap me-3"
-                  style={{ minWidth: "160px" }}
-                >
-                  ابــــــــدأ التجربة
-                </span>
-              </button>
-            )}
-          </div>
-
-          <div
-            ref={firstSaudiGuyRef}
-            className="absolute right-20 inset-0 z-100 flex items-center justify-center scale-[0.9] opacity-0"
-            style={{ transformOrigin: "center center" }}
-          >
-            {/* Wrapper that links guy + headphones */}
-            <div className="relative w-[400px] h-[400px]">
-              {/* Guy */}
-              <Image
-                src="/saudi-guy-1.svg"
-                alt="Guy"
-                fill
-                className="object-contain relative z-10"
-              />
-
-              {/* Headphones - now positioned relative to guy */}
-              <Image
-                src="/headphone2.svg"
-                alt="headphones"
-                width={70}
-                height={100}
-                className="absolute top-[105px] right-[103px] z-20"
-              />
-            </div>
-          </div>
-        </main>
-
-        <footer className="p-4 text-center text-sm flex gap-2 items-center mx-auto">
+        <footer
+          className={`p-4 text-center text-sm flex gap-2 items-center mx-auto ${
+            sceneStep === "landing-page" ? "opacity-100" : "opacity-0"
+          }`}
+        >
           <Image
             src="/headphones.svg"
             width={20}
@@ -353,12 +227,12 @@ export default function Home() {
             alt="headset-icon"
           />
           <p className="text-md mt-2 text-faded-black opacity-[50%]">
-            ننصح باستخدام سماعات الرأس لتحقيق أفضل تجربة.{" "}
+            ننصح باستخدام سماعات الرأس لتحقيق أفضل تجربة.
           </p>
         </footer>
       </div>
 
-      {/* New Footer (not inside sceneRef anymore!) */}
+      {/* FOOTER OVERLAY */}
       {showIntroFooter && (
         <div className="fixed bottom-10 mx-auto w-[90%] flex justify-between items-center z-1000 text-[#56554A]">
           <Image
@@ -371,7 +245,7 @@ export default function Home() {
 
           {/* Scroll Mouse */}
           {showScrollMouse && (
-            <div className="flex justify-center items-center relative opacity-0 animate-fadeIn delay-[800ms]">
+            <div className="flex justify-center items-center relative opacity-0 animate-fadeIn delay-[1200ms]">
               <Image
                 className="relative"
                 src="/mouse.svg"

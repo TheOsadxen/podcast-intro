@@ -66,6 +66,23 @@ body {
   }
 }
 
+/* Hide scrollbar while still allowing scroll */
+body::-webkit-scrollbar {
+  display: none;
+}
+
+html {
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+}
+
+html::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari, Opera */
+}
+
 
 
 @theme {
