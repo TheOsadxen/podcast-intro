@@ -8,6 +8,7 @@ import gsap from "gsap";
 import SceneOne from "@/components/scenes/SceneOne";
 import { SceneType } from "@/types/scenes";
 import SceneTwo from "@/components/scenes/SceneTwo";
+import SceneThree from "@/components/scenes/SceneThree";
 
 export default function Home() {
   const [sceneStep, setSceneStep] = useState<SceneType>("landing-page");
@@ -201,7 +202,7 @@ export default function Home() {
 
       {/* SCENE 1 */}
       <div
-        className="flex-grow flex flex-col justify-between max-h-[1100px]"
+        className="flex-grow flex flex-col justify-center h-screen"
         ref={sceneRef}
       >
         {["landing-page", "sceneOne"].includes(sceneStep) ? (
@@ -214,8 +215,10 @@ export default function Home() {
             setShowIntroFooter={setShowIntroFooter}
             setShowScrollMouse={setShowScrollMouse}
           />
+        ) : sceneStep === "sceneTwo" ? (
+          <SceneTwo setSceneStep={setSceneStep} />
         ) : (
-          <SceneTwo />
+          <SceneThree setSceneStep={setSceneStep} />
         )}
       </div>
 

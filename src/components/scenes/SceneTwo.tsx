@@ -1,14 +1,21 @@
 // src/components/SceneTwo.tsx
 "use client";
 
-import { RefObject, useLayoutEffect, useRef } from "react";
+import { RefObject, useEffect, useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import Image from "next/image";
 import PhoneSVG from "@/assets/mobile.svg";
 import OrangeSVG from "@/assets/orange-sentence.svg";
 import BlackSVG from "@/assets/black-sentence.svg";
+import { SceneType } from "@/types/scenes";
 
-export default function SceneTwo() {
+interface SceneTwoProps {
+  setSceneStep: (step: SceneType) => void;
+}
+
+export default function SceneTwo({ setSceneStep }: SceneTwoProps) {
+  const [isScrollEnabled, setIsScrollEnabled] = useState(false);
+
   const blackRef = useRef<HTMLDivElement>(null);
   const orangeRef = useRef<HTMLDivElement>(null);
   const phoneRef = useRef<HTMLDivElement>(null);
@@ -48,7 +55,7 @@ export default function SceneTwo() {
           rotation: -45,
           opacity: 0.3,
           transformOrigin: "center center",
-          duration: 1.1,
+          duration: 1,
           ease: "power2.inOut",
         },
         "scene2Start"
@@ -61,9 +68,10 @@ export default function SceneTwo() {
         {
           autoAlpha: 1,
           clipPath: "inset(0% 0% 0% 0%)",
-          duration: 1.3,
+          duration: 1.1,
           ease: "power3.out",
           opacity: 1,
+          onComplete: () => setIsScrollEnabled(true),
         },
         "scene2Start"
       )
@@ -85,12 +93,55 @@ export default function SceneTwo() {
         },
         "scene2Start-=0.1"
       );
-  }, []);
+
+    return () => {
+      tl.kill();
+    };
+  }, [setSceneStep]);
+
+  useEffect(() => {
+    let wheelCount = 0;
+    const onWheel = () => {
+      if (!isScrollEnabled) return;
+
+      wheelCount++;
+      if (wheelCount >= 2) {
+        window.removeEventListener("wheel", onWheel);
+        // run your exit timeline
+        const exit = gsap.timeline({
+          onComplete: () => setSceneStep("sceneThree"),
+        });
+        exit
+          .to(wavesRef.current, { autoAlpha: 0, duration: 0.8 }, 0)
+          .to(
+            blackRef.current,
+            { y: "-=260", autoAlpha: 0, duration: 1.2, ease: "power2.inOut" },
+            0
+          )
+          .to(
+            phoneRef.current,
+            { y: "-=280", autoAlpha: 0, duration: 1.2, ease: "power2.inOut" },
+            0.05
+          )
+          .to(
+            orangeRef.current,
+            { y: "-=240", autoAlpha: 0, duration: 1.2, ease: "power2.inOut" },
+            0.1
+          );
+      }
+    };
+    window.addEventListener("wheel", onWheel);
+
+    return () => {
+      window.removeEventListener("wheel", onWheel);
+      // kill any timelines here…
+    };
+  }, [isScrollEnabled, setSceneStep]);
 
   return (
     <div
-      className="relative flex-grow flex items-center justify-center mb-5  h-screen        
-      overflow-hidden "
+      className={`relative flex-grow flex items-center justify-center mb-5  h-screen   overflow-hidden     
+      `}
     >
       {/* Background SVG */}
       <Image

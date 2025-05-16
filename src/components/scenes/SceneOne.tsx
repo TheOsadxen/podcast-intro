@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import Image from "next/image";
 import { SceneType } from "@/types/scenes";
@@ -27,12 +27,14 @@ export default function SceneOne({
   sceneRef,
   sceneStep,
 }: SceneOneProps) {
+  const [isScrollEnabled, setIsScrollEnabled] = useState(false);
+
   const textRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const guyRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (sceneStep === "landing-page") return;
+    if (sceneStep === "landing-page" || !isScrollEnabled) return;
 
     let scrollCount = 0;
 
@@ -87,7 +89,10 @@ export default function SceneOne({
         duration: 1.6,
         ease: "power2.inOut",
         transformOrigin: "center center",
-        onComplete: () => setSceneStep("sceneOne"),
+        onComplete: () => {
+          setSceneStep("sceneOne");
+          setIsScrollEnabled(true);
+        },
       },
       0
     );
@@ -191,7 +196,7 @@ export default function SceneOne({
       )}
 
       {/* Saudi Guy */}
-      <div
+      {/* <div
         ref={guyRef}
         className="absolute  inset-0 z-100 flex items-center justify-center opacity-0"
         style={{ transformOrigin: "center center" }}
@@ -208,6 +213,33 @@ export default function SceneOne({
             }}
           />
         </div>
+      </div> */}
+      <div
+        ref={guyRef}
+        className="
+      absolute
+      left-[48%] top-[54%]            
+      transform -translate-x-1/2 -translate-y-1/2
+      opacity-0
+      z-100
+    "
+        style={{ transformOrigin: "center center" }}
+      >
+        {/* 
+     Give it a fluid width in vw; height auto preserves the SVG’s aspect ratio.
+     max-w[...] keeps it from growing ridiculously on giant screens.
+   */}
+        <Image
+          src="/saudi-man.svg"
+          alt="Guy"
+          width={300}
+          height={400}
+          className="w-[40vw] max-w-[380px] h-auto"
+          style={{
+            imageRendering: "crisp-edges",
+            imageResolution: "from-image",
+          }}
+        />
       </div>
     </div>
   );
