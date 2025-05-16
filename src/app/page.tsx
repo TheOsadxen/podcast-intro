@@ -61,7 +61,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <header className="fixed top-0 left-[5%] w-[90%] z-50 pt-6 bg-transparent">
+      <header className="fixed top-0 left-[5%] w-[90%] z-5000 pt-6 bg-transparent">
         {/*Navbar section */}
         <div className=" w-full">
           {/* Logo and social media icons */}
@@ -83,7 +83,7 @@ export default function Home() {
                 onMouseLeave={() => setIsMenuOpen(false)}
               >
                 {/* Header area with icons - will be covered by menu when open */}
-                <div className="flex items-center  p-4 bg-transparent rounded-lg z-10 relative ">
+                <div className="flex items-center  p-4 bg-transparent rounded-lg z-5000 relative ">
                   {/* Contact Icons */}
                   <Link href="tel:+123456789" className="me-6">
                     <Image
@@ -128,7 +128,7 @@ export default function Home() {
                   ref={menuRef}
                   className={`absolute top-0 left-0 w-full ${
                     isMenuOpen ? "bg-shade-background" : "bg-transparent"
-                  }  overflow-hidden transition-all duration-300 ease-in-out rounded-2xl shadow-xs z-2000`}
+                  }  overflow-hidden transition-all duration-300 ease-in-out rounded-2xl shadow-xs z-5000`}
                   style={{ height: `${menuHeight}px` }}
                 >
                   {/* Header area clone for consistent styling */}
@@ -200,7 +200,10 @@ export default function Home() {
       </header>
 
       {/* SCENE 1 */}
-      <div className="flex-grow flex flex-col justify-between" ref={sceneRef}>
+      <div
+        className="flex-grow flex flex-col justify-between max-h-[1100px]"
+        ref={sceneRef}
+      >
         {["landing-page", "sceneOne"].includes(sceneStep) ? (
           <SceneOne
             sceneRef={sceneRef as React.RefObject<HTMLDivElement>}
@@ -214,22 +217,6 @@ export default function Home() {
         ) : (
           <SceneTwo />
         )}
-
-        <footer
-          className={`p-4 text-center text-sm flex gap-2 items-center mx-auto ${
-            sceneStep === "landing-page" ? "opacity-100" : "opacity-0"
-          }`}
-        >
-          <Image
-            src="/headphones.svg"
-            width={20}
-            height={20}
-            alt="headset-icon"
-          />
-          <p className="text-md mt-2 text-faded-black opacity-[50%]">
-            ننصح باستخدام سماعات الرأس لتحقيق أفضل تجربة.
-          </p>
-        </footer>
       </div>
 
       {/* FOOTER OVERLAY */}

@@ -1,7 +1,7 @@
 // src/components/SceneTwo.tsx
 "use client";
 
-import { useEffect, useRef } from "react";
+import { RefObject, useEffect, useRef } from "react";
 import gsap from "gsap";
 import Image from "next/image";
 import PhoneSVG from "@/assets/mobile.svg";
@@ -12,45 +12,80 @@ export default function SceneTwo() {
   const blackRef = useRef<HTMLDivElement>(null);
   const orangeRef = useRef<HTMLDivElement>(null);
   const phoneRef = useRef<HTMLDivElement>(null);
+  const wavesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // 0️⃣ Make sure nothing is visible initially
+    gsap.set([blackRef.current, orangeRef.current, phoneRef.current], {
+      autoAlpha: 0,
+      opacity: 0,
+      visibility: "hidden",
+    });
+
     const tl = gsap.timeline();
 
-    // 1) Black fades in
+    // 1️⃣ Black fades in from below
     tl.fromTo(
       blackRef.current,
       { autoAlpha: 0, y: 30 },
       { autoAlpha: 1, y: 0, duration: 1, ease: "power2.out" }
     )
-      // 2) Black slides down a bit
+      // Label the start of Scene 2
+      .addLabel("scene2Start", "+=0.2")
+      // 2️⃣ At scene2Start: push black down
       .to(
         blackRef.current,
         { y: 60, duration: 0.8, ease: "power2.inOut" },
-        "+=0.2"
+        "scene2Start"
+      )
+      // 3️⃣ At scene2Start: rotate & scale waves
+      .to(
+        wavesRef.current,
+        {
+          scale: 1.3,
+          rotation: -45,
+          opacity: 0.3,
+          transformOrigin: "center center",
+          duration: 1.1,
+          ease: "power2.inOut",
+        },
+        "scene2Start"
+      )
+      // 4️⃣ At scene2Start: orange “curtain” reveal
+      .fromTo(
+        orangeRef.current,
+        { autoAlpha: 1, clipPath: "inset(0 50% 0 50%)", opacity: 1 },
+        {
+          autoAlpha: 1,
+          clipPath: "inset(0% 0% 0% 0%)",
+          duration: 1.6,
+          ease: "power3.out",
+          opacity: 1,
+        },
+        "scene2Start"
+      )
+      // 5️⃣ At scene2Start: phone fade + tilt
+      .fromTo(
+        phoneRef.current,
+        {
+          autoAlpha: 0,
+          rotate: -45,
+          transformOrigin: "center center",
+          scale: 0.6,
+        },
+        {
+          autoAlpha: 1,
+          rotate: 3,
+          duration: 1,
+          ease: "power2.out",
+          scale: 1,
+        },
+        "scene2Start-=0.1"
       );
-    // 3) Orange scales up like a curtain
-    tl.fromTo(
-      orangeRef.current,
-      { autoAlpha: 1, clipPath: "inset(0 50% 0 50%)" },
-      {
-        autoAlpha: 1,
-        clipPath: "inset(0 0% 0% 0%)",
-        duration: 1.6,
-        ease: "power3.out",
-      },
-      "-=0.8"
-    );
-    // 4) Phone fades in & tilts
-    tl.fromTo(
-      phoneRef.current,
-      { autoAlpha: 0, rotate: -8, transformOrigin: "center center" },
-      { autoAlpha: 1, rotate: 3, duration: 1.2, ease: "power2.out" },
-      "-=1.0"
-    );
   }, []);
 
   return (
-    <div className="relative flex-grow flex items-center justify-center mb-5">
+    <div className="relative flex-grow flex items-center justify-center mb-5 ">
       {/* Background SVG */}
       <Image
         src="/waves-vector.svg"
@@ -58,6 +93,7 @@ export default function SceneTwo() {
         height={800}
         alt="bg-waves"
         className="absolute inset-0 my-auto h-full w-full object-contain z-0 mt-10"
+        ref={wavesRef as RefObject<HTMLImageElement>}
       />
 
       {/* Layer container */}
@@ -67,9 +103,9 @@ export default function SceneTwo() {
           ref={phoneRef}
           className="absolute z-10"
           style={{
-            top: "25%",
+            top: "55%",
             left: "50%",
-            transform: "translate(-50%, -80%)",
+            transform: "translate(-50%, -72%)",
           }}
         >
           <PhoneSVG
@@ -81,7 +117,7 @@ export default function SceneTwo() {
         {/* 2) Orange headline (z-20), pulled *down* closer to the black */}
         <div
           ref={orangeRef}
-          className="absolute z-20"
+          className="absolute z-20 "
           style={{
             top: "53%", // ← bring this down from ~48%
             left: "50%",
@@ -97,15 +133,15 @@ export default function SceneTwo() {
         {/* 3) Black subhead (z-30) */}
         <div
           ref={blackRef}
-          className="absolute z-30"
+          className="absolute z-30 "
           style={{
-            top: "60%", // stay ~60% so it intersects
+            top: "90%", // stay ~60% so it intersects
             left: "50%",
-            transform: "translate(-50%, -50%)",
+            transform: "translate(-50%, 220%)",
           }}
         >
           <BlackSVG
-            className="w-[50vw] max-w-[400px] h-auto"
+            className="w-[50vw] max-w-[260px] h-auto mt-3"
             preserveAspectRatio="xMidYMid meet"
           />
         </div>

@@ -112,10 +112,10 @@ export default function SceneOne({
       {/* Background SVG */}
       <Image
         src="/waves-vector.svg"
-        width={800}
-        height={800}
+        width={700}
+        height={700}
         alt="bg-waves"
-        className="absolute inset-0 my-auto h-full w-full object-contain z-0 mt-10"
+        className="absolute inset-0 my-auto h-[92%] w-full object-contain z-0 mt-10"
       />
 
       {/* Text */}
@@ -139,12 +139,12 @@ export default function SceneOne({
 
       {/* Start Button */}
       {showStartTourButton && (
-        <div className="mx-auto flex self-end ">
+        <div className="mx-auto flex flex-col items-center justify-end self-end gap-12 mt-10">
           {showStartTourButton && (
             <button
               ref={buttonRef}
               onClick={handleStartClick}
-              className="cursor-pointer z-1000 flex flex-row-reverse items-center overflow-hidden h-[48px] rounded-[20px] bg-[#e2ddbf] backdrop-blur-[13px] text-black px-1.5 transition-all duration-500"
+              className="cursor-pointer z-200 flex flex-row-reverse items-center overflow-hidden h-[48px] rounded-[20px] bg-[#e2ddbf] backdrop-blur-[13px] text-black px-1.5 transition-all duration-500"
             >
               <div className="flex-shrink-0">
                 <Image
@@ -164,11 +164,26 @@ export default function SceneOne({
               </span>
             </button>
           )}
+
+          <footer
+            className={`p-4 text-center text-sm flex gap-2 items-center mx-auto ${
+              sceneStep === "landing-page" ? "visible" : "hidden"
+            }`}
+          >
+            <Image
+              src="/headphones.svg"
+              width={20}
+              height={20}
+              alt="headset-icon"
+            />
+            <p className="text-md mt-2 text-faded-black opacity-[50%]">
+              ننصح باستخدام سماعات الرأس لتحقيق أفضل تجربة.
+            </p>
+          </footer>
         </div>
       )}
 
       {/* Saudi Guy */}
-
       <div
         ref={guyRef}
         className="absolute  inset-0 z-100 flex items-center justify-center opacity-0"
