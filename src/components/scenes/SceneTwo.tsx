@@ -1,4 +1,3 @@
-// src/components/SceneTwo.tsx
 "use client";
 
 import { RefObject, useEffect, useLayoutEffect, useRef, useState } from "react";
@@ -23,7 +22,6 @@ export default function SceneTwo({ setSceneStep }: SceneTwoProps) {
 
   useLayoutEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    // 0️⃣ Make sure nothing is visible initially
     gsap.set([blackRef.current, orangeRef.current, phoneRef.current], {
       autoAlpha: 0,
       opacity: 0,
@@ -32,22 +30,19 @@ export default function SceneTwo({ setSceneStep }: SceneTwoProps) {
 
     const tl = gsap.timeline();
 
-    // 1️⃣ Black fades in from below
     tl.fromTo(
       blackRef.current,
       { autoAlpha: 0, y: 30 },
       { autoAlpha: 1, y: 0, duration: 1, ease: "power2.out" }
     )
-      // Label the start of Scene 2
       .addLabel("scene2Start", "+=0.2")
-      // 2️⃣ At scene2Start: push black down
+
       .to(
         blackRef.current,
         { y: 110, duration: 0.8, ease: "power2.inOut" },
         "scene2Start"
       )
 
-      // 3️⃣ At scene2Start: rotate & scale waves
       .to(
         wavesRef.current,
         {
@@ -61,7 +56,6 @@ export default function SceneTwo({ setSceneStep }: SceneTwoProps) {
         "scene2Start"
       )
 
-      // 4️⃣ At scene2Start: orange “curtain” reveal
       .fromTo(
         orangeRef.current,
         { autoAlpha: 1, clipPath: "inset(0 50% 0 50%)", opacity: 1 },
@@ -75,7 +69,6 @@ export default function SceneTwo({ setSceneStep }: SceneTwoProps) {
         },
         "scene2Start"
       )
-      // 5️⃣ At scene2Start: phone fade + tilt
       .fromTo(
         phoneRef.current,
         {
@@ -107,7 +100,7 @@ export default function SceneTwo({ setSceneStep }: SceneTwoProps) {
       wheelCount++;
       if (wheelCount >= 2) {
         window.removeEventListener("wheel", onWheel);
-        // run your exit timeline
+
         const exit = gsap.timeline({
           onComplete: () => setSceneStep("sceneThree"),
         });
@@ -134,7 +127,6 @@ export default function SceneTwo({ setSceneStep }: SceneTwoProps) {
 
     return () => {
       window.removeEventListener("wheel", onWheel);
-      // kill any timelines here…
     };
   }, [isScrollEnabled, setSceneStep]);
 
@@ -155,7 +147,7 @@ export default function SceneTwo({ setSceneStep }: SceneTwoProps) {
 
       {/* Layer container */}
       <div className="relative w-[80vw] max-w-[900px] h-auto">
-        {/* 1) Phone (z-10) */}
+        {/* 1) Phone */}
         <div
           ref={phoneRef}
           className="absolute z-10"
@@ -171,12 +163,12 @@ export default function SceneTwo({ setSceneStep }: SceneTwoProps) {
           />
         </div>
 
-        {/* 2) Orange headline (z-20), pulled *down* closer to the black */}
+        {/* 2) Orange headline */}
         <div
           ref={orangeRef}
           className="absolute z-20 "
           style={{
-            top: "53%", // ← bring this down from ~48%
+            top: "53%",
             left: "50%",
             transform: "translate(-50%, -5%)",
           }}
@@ -187,7 +179,7 @@ export default function SceneTwo({ setSceneStep }: SceneTwoProps) {
           />
         </div>
 
-        {/* 3) Black subhead (z-30) */}
+        {/* 3) Black subhead  */}
         <div
           ref={blackRef}
           className="absolute z-30 left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"

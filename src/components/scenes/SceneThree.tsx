@@ -9,7 +9,6 @@ import StandingGuySceneSVG from "@/assets/scene-three.svg";
 import OrangeTextSVG from "@/assets/scene-three-orange-text.svg";
 import BlackTextSVG from "@/assets/scene-three-black-text.svg";
 
-// This component only needs setSceneStep to hand off to sceneFour
 interface SceneThreeProps {
   setSceneStep: (s: SceneType) => void;
 }
@@ -105,31 +104,30 @@ export default function SceneThree({}: SceneThreeProps) {
     );
 
     const shakeTl = gsap.timeline({
-      repeat: -1, // loop for ever
-      repeatDelay: 2, // <-- 2-second rest AFTER each shake burst
+      repeat: -1,
+      repeatDelay: 2,
     });
 
     shakeTl.to(magicStar, {
-      rotation: 25, // ±25° swing
-      duration: 0.08, // very quick
+      rotation: 25,
+      duration: 0.08,
       ease: "sine.inOut",
-      yoyo: true, // auto-reverse
-      repeat: 5, // 6 swings = 3 full back-and-forth cycles
-      transformOrigin: "50% 50%", // pivot at centre
+      yoyo: true,
+      repeat: 5,
+      transformOrigin: "50% 50%",
     });
 
-    //  ▸ pivot near the engine nozzle so the nose really swings
     gsap.set([...rocket, ...rocketGas], { transformOrigin: "50% 90%" });
 
-    const rocketTimeline = gsap.timeline({ repeat: -1, yoyo: true }); // endless pendulum
+    const rocketTimeline = gsap.timeline({ repeat: -1, yoyo: true });
 
     rocketTimeline.to([...rocket, ...rocketGas], {
-      x: 8, // only 8 px left ↔ right
-      rotation: -6, // tilt the opposite way (±6°)
-      duration: 0.5, // very fast
-      ease: "steps(2)", // 2-frame “choppy” motion
-      yoyo: true, // bounce back
-      repeat: -1, // loop forever
+      x: 8,
+      rotation: -6,
+      duration: 0.5,
+      ease: "steps(2)",
+      yoyo: true,
+      repeat: -1,
     });
 
     // Then spin the glass back to its native tilt
@@ -145,21 +143,19 @@ export default function SceneThree({}: SceneThreeProps) {
       defaults: { ease: "bounce.inOut" },
     });
 
-    // 1s pause
     bulbLightTimeLineLoop.to({}, { duration: 1 }, "+=2");
 
-    // tween to gray
     bulbLightTimeLineLoop.to(svgSelector("  .scene-three_svg__bulb-light"), {
       fill: "#E4E4E4",
       duration: 0.2,
     });
     bulbLightTimeLineLoop.to({}, { duration: 0.2 }, "+=0.5");
 
-    // tween back to original
     bulbLightTimeLineLoop.to(svgSelector("  .scene-three_svg__bulb-light"), {
       fill: "#FFD503",
       duration: 0.2,
     });
+
     bulbLightTimeLineLoop.to({}, { duration: 0.2 }, "+=0.5");
 
     return () => {
