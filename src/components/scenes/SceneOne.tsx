@@ -3,6 +3,10 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import Image from "next/image";
 import { SceneType } from "@/types/scenes";
+import WelcomTitle from "@/assets/scene-one-title.svg";
+import WelcomSubTitle from "@/assets/scene-one-subtitle.svg";
+import ButtonText from "@/assets/scene-one-button-text.svg";
+import SceneOneDisclaimer from "@/assets/scene-one-disclaimer.svg";
 
 interface SceneOneProps {
   setSceneStep: (step: SceneType) => void;
@@ -108,31 +112,34 @@ export default function SceneOne({
   };
 
   return (
-    <div className="relative flex-grow flex items-center justify-center mb-5">
+    <div className="relative flex-grow flex items-center justify-center mb-5 h-screen overflow-hidden">
       {/* Background SVG */}
       <Image
         src="/waves-vector.svg"
         width={700}
         height={700}
         alt="bg-waves"
-        className="absolute inset-0 my-auto h-[92%] w-full object-contain z-0 mt-10"
+        className="absolute inset-0 w-full h-full object-contain z-0 scale-90 mt-4"
       />
 
       {/* Text */}
       <div
-        className="absolute inset-0 z-10 flex-col flex items-center justify-center"
+        className="absolute inset-0 z-10 flex flex-col items-center justify-center"
         ref={textRef}
       >
         <div className="text-center mt-10 flex items-end relative">
-          <h2
-            className="text-lg md:text-5xl font-bold rtl text-black align-bottom"
-            style={{ fontFamily: `"source-arabic-sans", sans-serif` }}
-          >
-            أهلاً بك في <span className="text-light-orange">مُكالمة،</span>
-          </h2>
+          <WelcomTitle
+            className="w-[24vw] max-w-[330px] h-auto"
+            ref={textRef}
+            preserveAspectRatio="xMidYMid meet"
+          />
+
           <div className="absolute top-[80px] right-0 w-[100%] text-center font-[600] rtl">
-            <p className="mb-1">منصتك لاكتشاف أفكار مبتكرة</p>
-            <p>تلهم التغيير الإيجابي.</p>
+            <WelcomSubTitle
+              className="w-[12vw] max-w-[200px] h-auto mx-auto "
+              ref={textRef}
+              preserveAspectRatio="xMidYMid meet"
+            />
           </div>
         </div>
       </div>
@@ -156,17 +163,15 @@ export default function SceneOne({
               </div>
 
               {/* Text - gets clipped from left */}
-              <span
-                className="text-lg font-bold whitespace-nowrap me-3"
-                style={{ minWidth: "160px" }}
-              >
-                ابــــــــدأ التجربة
-              </span>
+              <ButtonText
+                className="w-full max-w-[150px] h-auto mx-4"
+                preserveAspectRatio="xMidYMid meet"
+              />
             </button>
           )}
 
           <footer
-            className={`p-4 text-center text-sm flex gap-2 items-center mx-auto ${
+            className={`p-4 text-center text-sm flex gap-2 items-end mx-auto ${
               sceneStep === "landing-page" ? "visible" : "hidden"
             }`}
           >
@@ -176,9 +181,11 @@ export default function SceneOne({
               height={20}
               alt="headset-icon"
             />
-            <p className="text-md mt-2 text-faded-black opacity-[50%]">
-              ننصح باستخدام سماعات الرأس لتحقيق أفضل تجربة.
-            </p>
+
+            <SceneOneDisclaimer
+              className="w-full  h-auto mx-1"
+              preserveAspectRatio="xMidYMid meet"
+            />
           </footer>
         </div>
       )}
@@ -189,7 +196,7 @@ export default function SceneOne({
         className="absolute  inset-0 z-100 flex items-center justify-center opacity-0"
         style={{ transformOrigin: "center center" }}
       >
-        <div className="relative w-[32vw] h-[39vh] flex justify-center items-center mt-25 mr-20">
+        <div className="relative w-[30vw] h-[37vh] flex justify-center items-center mt-13 mr-15">
           <Image
             src="/saudi-man.svg"
             alt="Guy"

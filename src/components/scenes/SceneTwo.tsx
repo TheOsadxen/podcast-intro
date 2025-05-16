@@ -1,7 +1,7 @@
 // src/components/SceneTwo.tsx
 "use client";
 
-import { RefObject, useEffect, useRef } from "react";
+import { RefObject, useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import Image from "next/image";
 import PhoneSVG from "@/assets/mobile.svg";
@@ -14,7 +14,8 @@ export default function SceneTwo() {
   const phoneRef = useRef<HTMLDivElement>(null);
   const wavesRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     // 0️⃣ Make sure nothing is visible initially
     gsap.set([blackRef.current, orangeRef.current, phoneRef.current], {
       autoAlpha: 0,
@@ -35,9 +36,10 @@ export default function SceneTwo() {
       // 2️⃣ At scene2Start: push black down
       .to(
         blackRef.current,
-        { y: 60, duration: 0.8, ease: "power2.inOut" },
+        { y: 110, duration: 0.8, ease: "power2.inOut" },
         "scene2Start"
       )
+
       // 3️⃣ At scene2Start: rotate & scale waves
       .to(
         wavesRef.current,
@@ -51,6 +53,7 @@ export default function SceneTwo() {
         },
         "scene2Start"
       )
+
       // 4️⃣ At scene2Start: orange “curtain” reveal
       .fromTo(
         orangeRef.current,
@@ -58,7 +61,7 @@ export default function SceneTwo() {
         {
           autoAlpha: 1,
           clipPath: "inset(0% 0% 0% 0%)",
-          duration: 1.6,
+          duration: 1.3,
           ease: "power3.out",
           opacity: 1,
         },
@@ -85,14 +88,17 @@ export default function SceneTwo() {
   }, []);
 
   return (
-    <div className="relative flex-grow flex items-center justify-center mb-5 ">
+    <div
+      className="relative flex-grow flex items-center justify-center mb-5  h-screen        
+      overflow-hidden "
+    >
       {/* Background SVG */}
       <Image
         src="/waves-vector.svg"
-        width={800}
-        height={800}
+        width={700}
+        height={700}
         alt="bg-waves"
-        className="absolute inset-0 my-auto h-full w-full object-contain z-0 mt-10"
+        className="absolute inset-0 w-full h-full object-contain z-0 scale-90 mt-4"
         ref={wavesRef as RefObject<HTMLImageElement>}
       />
 
@@ -105,11 +111,11 @@ export default function SceneTwo() {
           style={{
             top: "55%",
             left: "50%",
-            transform: "translate(-50%, -72%)",
+            transform: "translate(-50%, -70%)",
           }}
         >
           <PhoneSVG
-            className="w-[24vw] max-w-[200px] h-auto"
+            className="w-[24vw] max-w-[300px] h-auto"
             preserveAspectRatio="xMidYMid meet"
           />
         </div>
@@ -125,7 +131,7 @@ export default function SceneTwo() {
           }}
         >
           <OrangeSVG
-            className="w-[60vw] max-w-[700px] h-auto"
+            className="w-[60vw] max-w-[940px] h-auto"
             preserveAspectRatio="xMidYMid meet"
           />
         </div>
@@ -133,15 +139,10 @@ export default function SceneTwo() {
         {/* 3) Black subhead (z-30) */}
         <div
           ref={blackRef}
-          className="absolute z-30 "
-          style={{
-            top: "90%", // stay ~60% so it intersects
-            left: "50%",
-            transform: "translate(-50%, 220%)",
-          }}
+          className="absolute z-30 left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"
         >
           <BlackSVG
-            className="w-[50vw] max-w-[260px] h-auto mt-3"
+            className="w-[50vw] max-w-[370px] h-auto mt-8"
             preserveAspectRatio="xMidYMid meet"
           />
         </div>
