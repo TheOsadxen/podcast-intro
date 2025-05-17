@@ -9,6 +9,7 @@ import SceneOne from "@/components/scenes/SceneOne";
 import { SceneType } from "@/types/scenes";
 import SceneTwo from "@/components/scenes/SceneTwo";
 import SceneThree from "@/components/scenes/SceneThree";
+import SceneFour from "@/components/scenes/SceneFour";
 
 export default function Home() {
   const [sceneStep, setSceneStep] = useState<SceneType>("landing-page");
@@ -32,6 +33,12 @@ export default function Home() {
   }, [isMenuOpen]);
 
   useEffect(() => {
+    if (sceneStep === "sceneFour") {
+      document.body.style.background = "white";
+    } else {
+      document.body.style.background = "rgba(241, 238, 205, 1)";
+    }
+
     if (sceneStep === "landing-page") {
       document.body.style.overflow = "hidden";
     } else {
@@ -54,7 +61,9 @@ export default function Home() {
 
   return (
     <div
-      className={`min-h-screen flex flex-col bg-background px-[5%] w-full h-100dvh`}
+      className={`min-h-screen flex flex-col ${
+        sceneStep === "sceneFour" ? "bg-white" : "bg-background"
+      } px-[5%] w-full h-100dvh`}
     >
       <Head>
         <title>مكالمة | Mukalamah</title>
@@ -62,7 +71,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <header className="fixed top-0 left-[5%] w-[90%] z-5000 pt-6 bg-transparent">
+      <header className="fixed site-header  pt-6 bg-transparent mx-auto w-[90%]">
         {/*Navbar section */}
         <div className=" w-full">
           {/* Logo and social media icons */}
@@ -205,7 +214,7 @@ export default function Home() {
         className="flex-grow flex flex-col justify-center h-screen"
         ref={sceneRef}
       >
-        {["landing-page", "sceneOne"].includes(sceneStep) ? (
+        {["landing-page", "sceneOne"].includes(sceneStep) && (
           <SceneOne
             sceneRef={sceneRef as React.RefObject<HTMLDivElement>}
             sceneStep={sceneStep}
@@ -215,16 +224,20 @@ export default function Home() {
             setShowIntroFooter={setShowIntroFooter}
             setShowScrollMouse={setShowScrollMouse}
           />
-        ) : sceneStep === "sceneTwo" ? (
-          <SceneTwo setSceneStep={setSceneStep} />
-        ) : (
+        )}
+
+        {sceneStep === "sceneTwo" && <SceneTwo setSceneStep={setSceneStep} />}
+
+        {sceneStep === "sceneThree" && (
           <SceneThree setSceneStep={setSceneStep} />
         )}
+
+        {sceneStep === "sceneFour" && <SceneFour setSceneStep={setSceneStep} />}
       </div>
 
       {/* FOOTER OVERLAY */}
       {showIntroFooter && (
-        <div className="fixed bottom-10 mx-auto w-[90%] flex justify-between items-center z-1000 text-[#56554A]">
+        <div className="fixed bottom-10 mx-auto w-[90%] flex justify-between items-center z-1000 text-[#56554A] site-footer">
           <Image
             src="/skip-intro-button.svg"
             className="cursor-pointer"

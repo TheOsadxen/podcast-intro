@@ -1,7 +1,6 @@
-// src/components/scenes/SceneThree.tsx
 "use client";
 
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import type { SceneType } from "@/types/scenes";
 // Assets
@@ -13,10 +12,9 @@ interface SceneThreeProps {
   setSceneStep: (s: SceneType) => void;
 }
 
-export default function SceneThree({}: SceneThreeProps) {
+export default function SceneThree({ setSceneStep }: SceneThreeProps) {
   const [isScrollEnabled, setIsScrollEnabled] = useState(false);
 
-  const wrapperRef = useRef<HTMLDivElement>(null);
   const blackRef = useRef<HTMLDivElement>(null);
   const redRef = useRef<HTMLDivElement>(null);
   const contentWrapperRef = useRef<HTMLDivElement>(null);
@@ -26,18 +24,14 @@ export default function SceneThree({}: SceneThreeProps) {
   useLayoutEffect(() => {
     // 1) auto‐scroll to top
     window.scrollTo({ top: 0, behavior: "smooth" });
-    const svgSelector = gsap.utils.selector(guyRef.current);
 
+    const svgSelector = gsap.utils.selector(guyRef.current);
     const bulbGlass = svgSelector(
       " .scene-three_svg__whole-bulb, .scene-three_svg__bulb-light"
     );
-
     const magicStar = svgSelector(" .scene-three_svg__magic-star");
-
     const star = svgSelector(" .scene-three_svg__star");
-
     const bulbDoide = svgSelector(".scene-three_svg__bulb-doide");
-
     const rocket = svgSelector(".scene-three_svg__rocket");
     const rocketGas = svgSelector(".scene-three_svg__rocket-gas");
     const circle = svgSelector(".scene-three_svg__circle");
@@ -65,13 +59,13 @@ export default function SceneThree({}: SceneThreeProps) {
 
     // 2) Counter-rotate only the glass so it pops in straight:
     gsap.set(svgSelector(".scene-three_svg__whole-bulb"), {
-      rotation: -14, // cancel the built-in tilt
+      rotation: -14,
       transformOrigin: "50% 50%",
       transformBox: "fillBox",
     });
 
     gsap.set(svgSelector(".scene-three_svg__bulb-light"), {
-      rotation: -17, // cancel the built-in tilt
+      rotation: -17,
       transformOrigin: "50% 55%",
       transformBox: "fillBox",
     });
@@ -79,7 +73,7 @@ export default function SceneThree({}: SceneThreeProps) {
     // 3) Prepare diode: no rotation shift
     gsap.set(bulbDoide, {
       rotation: -20,
-      transformOrigin: "top right", // pivot near the top of the diode
+      transformOrigin: "top right",
     });
 
     tl.to(
@@ -99,6 +93,11 @@ export default function SceneThree({}: SceneThreeProps) {
         y: 0,
         delay: 1.5,
         ease: "power1.inOut",
+        onComplete: () => {
+          setTimeout(() => {
+            setIsScrollEnabled(true);
+          }, 1000);
+        },
       },
       0
     );
@@ -108,14 +107,25 @@ export default function SceneThree({}: SceneThreeProps) {
       repeatDelay: 2,
     });
 
-    shakeTl.to(magicStar, {
-      rotation: 25,
-      duration: 0.08,
-      ease: "sine.inOut",
-      yoyo: true,
-      repeat: 5,
-      transformOrigin: "50% 50%",
-    });
+    shakeTl.fromTo(
+      magicStar,
+      {
+        rotation: 10,
+        duration: 0.08,
+        ease: "sine.inOut",
+        yoyo: true,
+        repeat: 2,
+        transformOrigin: "50% 50%",
+      },
+      {
+        rotation: -10,
+        duration: 0.08,
+        ease: "sine.inOut",
+        yoyo: true,
+        repeat: 2,
+        transformOrigin: "50% 50%",
+      }
+    );
 
     gsap.set([...rocket, ...rocketGas], { transformOrigin: "50% 90%" });
 
@@ -135,7 +145,6 @@ export default function SceneThree({}: SceneThreeProps) {
       rotation: 0, // back to that 15° tilt
       duration: 0.5,
       ease: "power2.out",
-      // x: 0,
     });
 
     const bulbLightTimeLineLoop = gsap.timeline({
@@ -163,11 +172,44 @@ export default function SceneThree({}: SceneThreeProps) {
     };
   }, []);
 
+  useEffect(() => {
+    const onWheel = (() => {
+      let wheelCount = 0;
+      return () => {
+        if (!isScrollEnabled) return;
+
+        if (++wheelCount < 2) return;
+
+        window.removeEventListener("wheel", onWheel);
+
+        const mask = document.getElementById("rhombMask")!;
+        const kids = contentWrapperRef.current!.children;
+
+        gsap.set(mask, { scale: 1, transformOrigin: "50% 50%", opacity: 0 });
+
+        const tl = gsap.timeline({
+          defaults: { ease: "power2.out" },
+          onComplete: () => setSceneStep("sceneFour"),
+        });
+
+        // 1️⃣ lift + fade Scene-3 elements
+        tl.to(kids, { yPercent: -120, duration: 1 })
+          .to(kids, { opacity: 0, duration: 0.8, stagger: 0.03 }, "<")
+
+          .to({}, { duration: 2 })
+
+          .to(mask, { scale: 3, duration: 0.8, opacity: 1 })
+          .to(mask, { scale: 12, duration: 0.8, ease: "power2.in" })
+          .to(mask, { autoAlpha: 0, duration: 0.3 });
+      };
+    })();
+
+    window.addEventListener("wheel", onWheel);
+    return () => window.removeEventListener("wheel", onWheel);
+  }, [isScrollEnabled, setSceneStep]);
+
   return (
-    <div
-      ref={wrapperRef}
-      className="relative flex-grow h-screen overflow-hidden flex items-center justify-center w-full"
-    >
+    <div className="relative flex-grow h-screen overflow-hidden flex items-center justify-center w-full">
       {/* 1) Background video */}
 
       {/* Text elements positioned above video */}

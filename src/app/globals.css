@@ -83,10 +83,41 @@ html::-webkit-scrollbar {
   /* Chrome, Safari, Opera */
 }
 
+.transition-mask {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: 65vmin;
+  /* tweak: smaller → thicker beige corners at start */
+  aspect-ratio: 1;
+  background: #ffffff;
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  /* diamond */
+  pointer-events: none;
+  transform: scale(0);
+  /* default collapsed */
+}
+
+.site-header,
+.site-footer {
+  /* always on top */
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 20000;
+}
+
+.transition-mask {
+  z-index: 15000;
+}
+
+body.zooming .transition-mask {
+  background: #ffffff;
+}
+
 
 
 @theme {
-
   --color-light-orange: rgb(var(--light-orange-rgb));
   --color-background: rgb(var(--background-rgb));
   --color-light-black: rgb(var(--light-black-rgb));

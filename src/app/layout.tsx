@@ -15,8 +15,9 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://use.typekit.net/tis7nmt.css" />
       </head>
 
-      <body className="min-h-screen overflow-hidden  bg-background">
+      <body className="min-h-screen overflow-hidden bg-background">
         {children}
+        <div className="transition-mask" id="rhombMask" />
       </body>
     </html>
   );

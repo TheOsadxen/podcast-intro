@@ -60,7 +60,7 @@ export default function SceneOne({
 
     window.addEventListener("wheel", handleWheel);
     return () => window.removeEventListener("wheel", handleWheel);
-  }, [sceneStep, setSceneStep, setShowScrollMouse]);
+  }, [isScrollEnabled, sceneStep, setSceneStep, setShowScrollMouse]);
 
   const handleStartClick = () => {
     const tl = gsap.timeline();
@@ -91,7 +91,9 @@ export default function SceneOne({
         transformOrigin: "center center",
         onComplete: () => {
           setSceneStep("sceneOne");
-          setIsScrollEnabled(true);
+          setTimeout(() => {
+            setIsScrollEnabled(true);
+          }, 1000);
         },
       },
       0
