@@ -70,7 +70,6 @@ export default function SceneThree({ setSceneStep }: SceneThreeProps) {
       transformBox: "fillBox",
     });
 
-    // 3) Prepare diode: no rotation shift
     gsap.set(bulbDoide, {
       rotation: -20,
       transformOrigin: "top right",
