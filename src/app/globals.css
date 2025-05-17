@@ -115,6 +115,11 @@ body.zooming .transition-mask {
   background: #ffffff;
 }
 
+.white-bg {
+  background: #ffffff !important;
+}
+
+
 
 
 @theme {

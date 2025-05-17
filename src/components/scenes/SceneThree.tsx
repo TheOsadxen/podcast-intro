@@ -189,7 +189,6 @@ export default function SceneThree({ setSceneStep }: SceneThreeProps) {
 
         const tl = gsap.timeline({
           defaults: { ease: "power2.out" },
-          onComplete: () => setSceneStep("sceneFour"),
         });
 
         // 1️⃣ lift + fade Scene-3 elements
@@ -200,7 +199,13 @@ export default function SceneThree({ setSceneStep }: SceneThreeProps) {
 
           .to(mask, { scale: 3, duration: 0.8, opacity: 1 })
           .to(mask, { scale: 12, duration: 0.8, ease: "power2.in" })
-          .to(mask, { autoAlpha: 0, duration: 0.3 });
+          .add(() => {
+            document.body.classList.remove("bg-background");
+            document.body.style.background = "white ";
+          })
+
+          .to(mask, { autoAlpha: 0, duration: 0.3 })
+          .add(() => setSceneStep("sceneFour"));
       };
     })();
 

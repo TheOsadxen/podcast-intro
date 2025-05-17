@@ -33,12 +33,6 @@ export default function Home() {
   }, [isMenuOpen]);
 
   useEffect(() => {
-    if (sceneStep === "sceneFour") {
-      document.body.style.background = "white";
-    } else {
-      document.body.style.background = "rgba(241, 238, 205, 1)";
-    }
-
     if (sceneStep === "landing-page") {
       document.body.style.overflow = "hidden";
     } else {
@@ -60,11 +54,7 @@ export default function Home() {
   };
 
   return (
-    <div
-      className={`min-h-screen flex flex-col ${
-        sceneStep === "sceneFour" ? "bg-white" : "bg-background"
-      } px-[5%] w-full h-100dvh`}
-    >
+    <div className={`min-h-screen flex flex-col  px-[5%] w-full h-100dvh`}>
       <Head>
         <title>مكالمة | Mukalamah</title>
         <meta name="description" content="منصتك لاكتشاف أفكار مبتكرة" />
