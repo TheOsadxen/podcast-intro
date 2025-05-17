@@ -197,25 +197,6 @@ export default function SceneOne({
         </div>
       )}
 
-      {/* Saudi Guy */}
-      {/* <div
-        ref={guyRef}
-        className="absolute  inset-0 z-100 flex items-center justify-center opacity-0"
-        style={{ transformOrigin: "center center" }}
-      >
-        <div className="relative w-[30vw] h-[37vh] flex justify-center items-center mt-13 mr-15">
-          <Image
-            src="/saudi-man.svg"
-            alt="Guy"
-            fill
-            className="object-fill relative z-10"
-            style={{
-              imageRendering: "crisp-edges",
-              imageResolution: "from-image",
-            }}
-          />
-        </div>
-      </div> */}
       <div
         ref={guyRef}
         className="
