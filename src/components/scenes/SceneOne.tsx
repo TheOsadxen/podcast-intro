@@ -208,10 +208,6 @@ export default function SceneOne({
     "
         style={{ transformOrigin: "center center" }}
       >
-        {/* 
-     Give it a fluid width in vw; height auto preserves the SVG’s aspect ratio.
-     max-w[...] keeps it from growing ridiculously on giant screens.
-   */}
         <Image
           src="/saudi-man.svg"
           alt="Guy"
